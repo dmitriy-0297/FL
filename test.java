@@ -8,7 +8,7 @@ public class test {
     public static void Write_File(String table_sel [][], int n) throws IOException {
         FileWriter filewriter = new FileWriter(new File("Table1.txt"));
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < 4; j++) {
+            for (int j = 0; j < 6; j++) {
                 filewriter.write(table_sel[i][j] + " ");
                 filewriter.flush();
             }
@@ -78,9 +78,13 @@ public class test {
 
     public static void rnd(int n) throws IOException {
         String[][] table_sell;
-        table_sell = new String[n][4];
+        table_sell = new String[n][6];
         for (int i = 0; i < n; i++) {
             int j = 0;
+            table_sell[i][j] = rnd_inn();
+            j++;
+            table_sell[i][j] = rnd_kpp(table_sell[i][j-1]);
+            j++;
             table_sell[i][j] = rnd_inn();
             j++;
             table_sell[i][j] = rnd_kpp(table_sell[i][j-1]);
@@ -90,7 +94,7 @@ public class test {
             table_sell[i][j] = rnd_nds(table_sell[i][j-1]);
         }
         for (int i = 0; i < n; i++){
-            for (int j = 0; j < 4; j++) {
+            for (int j = 0; j < 6; j++) {
                 System.out.print(table_sell[i][j] + "  ");
             }
             System.out.println();

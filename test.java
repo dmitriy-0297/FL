@@ -5,8 +5,8 @@ import java.io.IOException;
 
 public class test {
 
-    public static void Write_File(String table_sel [][], int n) throws IOException {
-        FileWriter filewriter = new FileWriter(new File("Table1.txt"));
+    public static void Write_File(String table_sel [][], int n, String name) throws IOException {
+        FileWriter filewriter = new FileWriter(new File(name));
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < 6; j++) {
                 filewriter.write(table_sel[i][j] + " ");
@@ -76,34 +76,59 @@ public class test {
         return str_nds;
     }
 
-    public static void rnd(int n) throws IOException {
-        String[][] table_sell;
-        table_sell = new String[n][6];
-        for (int i = 0; i < n; i++) {
+    public static void createRndTable(int rowNumber, int columnNumber) throws IOException {
+        String[][] table_purchase;
+        String[][] table_sale;
+        table_purchase = new String[rowNumber][columnNumber];
+        table_sale = new String[rowNumber][columnNumber];
+        for (int i = 0; i < rowNumber; i++) {
             int j = 0;
-            table_sell[i][j] = rnd_inn();
+            table_purchase[i][j] = rnd_inn();
             j++;
-            table_sell[i][j] = rnd_kpp(table_sell[i][j-1]);
+            table_purchase[i][j] = rnd_kpp(table_purchase[i][j-1]);
             j++;
-            table_sell[i][j] = rnd_inn();
+            table_purchase[i][j] = rnd_inn();
             j++;
-            table_sell[i][j] = rnd_kpp(table_sell[i][j-1]);
+            table_purchase[i][j] = rnd_kpp(table_purchase[i][j-1]);
             j++;
-            table_sell[i][j] = rnd_sum();
+            table_purchase[i][j] = rnd_sum();
             j++;
-            table_sell[i][j] = rnd_nds(table_sell[i][j-1]);
+            table_purchase[i][j] = rnd_nds(table_purchase[i][j-1]);
         }
-        for (int i = 0; i < n; i++){
-            for (int j = 0; j < 6; j++) {
-                System.out.print(table_sell[i][j] + "  ");
+        for (int i = 0; i < rowNumber; i++){
+            for (int j = 0; j < columnNumber; j++) {
+                System.out.print(table_purchase[i][j] + "  ");
             }
             System.out.println();
         }
-        Write_File(table_sell, n);
+        Write_File(table_purchase, rowNumber, "Table1.txt");
+        System.out.println("\n");
+        for (int i = 0; i < rowNumber; i++){
+            int j =0;
+            table_sale[i][j] = table_purchase[i][j+2];
+            j++;
+            table_sale[i][j] = table_purchase[i][j+2];
+            j++;
+            table_sale[i][j] = table_purchase[i][j-2];
+            j++;
+            table_sale[i][j] = table_purchase[i][j-2];
+            j++;
+            table_sale[i][j] = rnd_sum();
+            j++;
+            table_sale[i][j] = rnd_nds(table_sale[i][j-1]);
+        }
+        for (int i = 0; i < rowNumber; i++){
+            for (int j = 0; j < columnNumber; j++) {
+                System.out.print(table_sale[i][j] + "  ");
+            }
+            System.out.println();
+        }
+        Write_File(table_sale, rowNumber, "Table2.txt");
     }
 
     public static void main(String[] args) throws IOException {
-        int n = 10;
-        rnd(n);
+        int rowNumber = 10;
+        int columnNumber = 6;
+        createRndTable(rowNumber, columnNumber);
     }
 }

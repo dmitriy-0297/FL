@@ -1,15 +1,19 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
+import java.util.Scanner;
 
-
-public class test {
+public class FL_1 {
 
     public static void Write_File(String table_sel [][], int n, String name) throws IOException {
         FileWriter filewriter = new FileWriter(new File(name));
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < 6; j++) {
-                filewriter.write(table_sel[i][j] + " ");
+                filewriter.write(table_sel[i][j]);
+                if (j < 5){
+                    filewriter.write(",");
+                }
                 filewriter.flush();
             }
             filewriter.write("\n");
@@ -36,12 +40,12 @@ public class test {
     }
 
     public static String rnd_kpp(String inn){
-       String str1 = new String();
-       int num;
-       int min = 10000;
-       int max = 99999;
-       for (int i = 0; i < 4; i++){
-          str1 += String.valueOf(inn.charAt(i));
+        String str1 = new String();
+        int num;
+        int min = 10000;
+        int max = 99999;
+        for (int i = 0; i < 4; i++){
+            str1 += String.valueOf(inn.charAt(i));
         }
         max -= min;
         num = (int) (Math.random() * ++max) + min;
@@ -57,9 +61,9 @@ public class test {
         max -= min;
         num = (Math.random() * ++max) + min;
         sum_rnd = num / 100;
-        sum_rnd = sum_rnd * 1000;
+        sum_rnd = sum_rnd * 100;
         int i = (int) Math.round(sum_rnd);
-        sum_rnd = (double)i / 1000;
+        sum_rnd = (double)i / 100;
         String str_sum = String.valueOf(sum_rnd);
         return str_sum;
     }
@@ -69,14 +73,56 @@ public class test {
         sum = Double.parseDouble(sum_str);
         double nds;
         nds = sum * 18/100;
-        nds = nds * 1000;
+        nds = nds * 100;
         int i = (int) Math.round(nds);
-        nds = (double)i / 1000;
+        nds = (double)i / 100;
         String str_nds = String.valueOf(nds);
         return str_nds;
     }
 
-    public static void createRndTable(int rowNumber, int columnNumber) throws IOException {
+    private static void createError(double percentError, String[][] table, int min, int max) {
+        int error;
+        for (int j = 0; j < percentError; j++){
+            Random rnd = new Random(System.currentTimeMillis());
+            error = min + rnd.nextInt(max - min + 1);
+            table[error][0] = rnd_inn();
+            j++;
+            error = min + rnd.nextInt(max - min + 1);
+            table[error][1] = rnd_kpp(table[error][0]);
+            j++;
+            table[error][2] = rnd_inn();
+            j++;
+            error = min + rnd.nextInt(max - min + 1);
+            table[error][3] = rnd_kpp(table[error][2]);
+        }
+    }
+
+    public static void createTableErr(int rowNumber, String[][] table_purchase, String[][] table_sale, double percentError) throws IOException{
+        String[][] table_purchase_err;
+        String[][] table_sale_err;
+        table_purchase_err = new String[table_purchase.length][table_purchase[0].length];
+        table_sale_err = new String[table_sale.length][table_sale[0].length];
+        int countErr = (int)(table_purchase.length * percentError / 100);
+        for (int i = 0; i < table_purchase.length; i++){
+            for (int j = 0; j < table_purchase[0].length; j++){
+                table_purchase_err[i][j] = table_purchase[i][j];
+            }
+        }
+        for (int i = 0; i < table_sale.length; i++) {
+            for (int j = 0; j < table_sale[0].length; j++) {
+                table_sale_err[i][j] = table_sale[i][j];
+            }
+        }
+        int min = 0;
+        int max = table_sale.length;
+        createError(countErr, table_sale_err, min, max);
+        createError(countErr, table_purchase_err, min, max);
+        Write_File(table_purchase_err, rowNumber, "TableError1.csv");
+        Write_File(table_sale_err, rowNumber, "TableError2.csv");
+    }
+
+
+    public static void createRndTable(int rowNumber, int columnNumber, double percentErrors) throws IOException {
         String[][] table_purchase;
         String[][] table_sale;
         table_purchase = new String[rowNumber][columnNumber];
@@ -95,14 +141,7 @@ public class test {
             j++;
             table_purchase[i][j] = rnd_nds(table_purchase[i][j-1]);
         }
-        for (int i = 0; i < rowNumber; i++){
-            for (int j = 0; j < columnNumber; j++) {
-                System.out.print(table_purchase[i][j] + "  ");
-            }
-            System.out.println();
-        }
-        Write_File(table_purchase, rowNumber, "Table1.txt");
-        System.out.println("\n");
+        Write_File(table_purchase, rowNumber, "Table1.csv");
         for (int i = 0; i < rowNumber; i++){
             int j =0;
             table_sale[i][j] = table_purchase[i][j+2];
@@ -117,18 +156,16 @@ public class test {
             j++;
             table_sale[i][j] = rnd_nds(table_sale[i][j-1]);
         }
-        for (int i = 0; i < rowNumber; i++){
-            for (int j = 0; j < columnNumber; j++) {
-                System.out.print(table_sale[i][j] + "  ");
-            }
-            System.out.println();
-        }
-        Write_File(table_sale, rowNumber, "Table2.txt");
+        Write_File(table_sale, rowNumber, "Table2.csv");
+        createTableErr(rowNumber, table_purchase, table_sale, percentErrors);
     }
 
     public static void main(String[] args) throws IOException {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter precent errors : ");
+        double percentErrors = in.nextDouble();
         int rowNumber = 10;
         int columnNumber = 6;
-        createRndTable(rowNumber, columnNumber);
+        createRndTable(rowNumber, columnNumber, percentErrors);
     }
 }

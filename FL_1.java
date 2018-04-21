@@ -85,18 +85,24 @@ public class FL_1 {
         for (int j = 0; j < percentError; j++){
             Random rnd = new Random(System.currentTimeMillis());
             error = min + rnd.nextInt(max - min + 1);
+            //System.out.print(error + " ");
             table[error][0] = rnd_inn();
             j++;
             error = min + rnd.nextInt(max - min + 1);
+            //System.out.print(error + " ");
             table[error][1] = rnd_kpp(table[error][0]);
             j++;
+            error = min + rnd.nextInt(max - min + 1);
+            //System.out.print(error + " ");
             table[error][2] = rnd_inn();
             j++;
             error = min + rnd.nextInt(max - min + 1);
+            //System.out.print(error + " ");
             table[error][3] = rnd_kpp(table[error][2]);
+            //System.out.print(" ");
         }
     }
-
+    //за проход портим записи продавца и записи покупателя
     public static void createTableErr(int rowNumber, String[][] table_purchase, String[][] table_sale, double percentError) throws IOException{
         String[][] table_purchase_err;
         String[][] table_sale_err;
@@ -113,9 +119,11 @@ public class FL_1 {
                 table_sale_err[i][j] = table_sale[i][j];
             }
         }
-        int min = 0;
+        int min = 1;
         int max = table_sale.length;
         createError(countErr, table_sale_err, min, max);
+        min += 1;
+        max -= 1;
         createError(countErr, table_purchase_err, min, max);
         Write_File(table_purchase_err, rowNumber, "TableError1.csv");
         Write_File(table_sale_err, rowNumber, "TableError2.csv");
@@ -127,7 +135,13 @@ public class FL_1 {
         String[][] table_sale;
         table_purchase = new String[rowNumber][columnNumber];
         table_sale = new String[rowNumber][columnNumber];
-        for (int i = 0; i < rowNumber; i++) {
+        table_purchase[0][0] = "INN_SALE";
+        table_purchase[0][1] = "KPP_SALE";
+        table_purchase[0][2] = "INN_PURCHASE";
+        table_purchase[0][3] = "KPP_PURCHASE";
+        table_purchase[0][4] = "SUM";
+        table_purchase[0][5] = "NDS";
+        for (int i = 1; i < rowNumber; i++) {
             int j = 0;
             table_purchase[i][j] = rnd_inn();
             j++;
@@ -142,7 +156,13 @@ public class FL_1 {
             table_purchase[i][j] = rnd_nds(table_purchase[i][j-1]);
         }
         Write_File(table_purchase, rowNumber, "Table1.csv");
-        for (int i = 0; i < rowNumber; i++){
+        table_sale[0][0] = "INN_PURCHASE";
+        table_sale[0][1] = "KPP_PURCHASE";
+        table_sale[0][2] = "INN_SALE";
+        table_sale[0][3] = "KPP_SALE";
+        table_sale[0][4] = "SUM";
+        table_sale[0][5] = "NDS";
+        for (int i = 1; i < rowNumber; i++){
             int j =0;
             table_sale[i][j] = table_purchase[i][j+2];
             j++;
@@ -164,7 +184,7 @@ public class FL_1 {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter precent errors : ");
         double percentErrors = in.nextDouble();
-        int rowNumber = 10;
+        int rowNumber = 11; // 10, +1 Т.К. заголовки таблицы
         int columnNumber = 6;
         createRndTable(rowNumber, columnNumber, percentErrors);
     }

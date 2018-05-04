@@ -139,8 +139,8 @@ public class FL_1 {
         table_purchase[0][1] = "KPP_SALE";
         table_purchase[0][2] = "INN_PURCHASE";
         table_purchase[0][3] = "KPP_PURCHASE";
-        table_purchase[0][4] = "SUM_PURCHASE";
-        table_purchase[0][5] = "NDS";
+        table_purchase[0][4] = "SUM_TABLE_PURCHASE";
+        table_purchase[0][5] = "NDS_TABLE_PURCHASE";
         for (int i = 1; i < rowNumber; i++) {
             int j = 0;
             table_purchase[i][j] = rnd_inn();
@@ -160,8 +160,8 @@ public class FL_1 {
         table_sale[0][1] = "KPP_PURCHASE";
         table_sale[0][2] = "INN_SALE";
         table_sale[0][3] = "KPP_SALE";
-        table_sale[0][4] = "SUM_SALE";
-        table_sale[0][5] = "NDS";
+        table_sale[0][4] = "SUM_TABLE_SALE";
+        table_sale[0][5] = "NDS_TABLE_SALE";
         for (int i = 1; i < rowNumber; i++){
             int j =0;
             table_sale[i][j] = table_purchase[i][j+2];

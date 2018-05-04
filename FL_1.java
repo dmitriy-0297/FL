@@ -139,7 +139,7 @@ public class FL_1 {
         table_purchase[0][1] = "KPP_SALE";
         table_purchase[0][2] = "INN_PURCHASE";
         table_purchase[0][3] = "KPP_PURCHASE";
-        table_purchase[0][4] = "SUM";
+        table_purchase[0][4] = "SUM_PURCHASE";
         table_purchase[0][5] = "NDS";
         for (int i = 1; i < rowNumber; i++) {
             int j = 0;
@@ -160,7 +160,7 @@ public class FL_1 {
         table_sale[0][1] = "KPP_PURCHASE";
         table_sale[0][2] = "INN_SALE";
         table_sale[0][3] = "KPP_SALE";
-        table_sale[0][4] = "SUM";
+        table_sale[0][4] = "SUM_SALE";
         table_sale[0][5] = "NDS";
         for (int i = 1; i < rowNumber; i++){
             int j =0;

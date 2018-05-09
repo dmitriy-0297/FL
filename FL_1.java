@@ -80,14 +80,16 @@ public class FL_1 {
         return str_nds;
     }
 
-    private static void createError(double percentError, String[][] table, int min, int max) {
+    private static void createErrorInn(double percentError, String[][] table, int min, int max) {
         int error;
         for (int j = 0; j < percentError; j++){
             Random rnd = new Random(System.currentTimeMillis());
             error = min + rnd.nextInt(max - min + 1);
-            //System.out.print(error + " ");
+            System.out.print(error + " ");
             table[error][0] = rnd_inn();
-            j++;
+            min--;
+            max++;
+            /*j++;
             error = min + rnd.nextInt(max - min + 1);
             //System.out.print(error + " ");
             table[error][1] = rnd_kpp(table[error][0]);
@@ -99,16 +101,69 @@ public class FL_1 {
             error = min + rnd.nextInt(max - min + 1);
             //System.out.print(error + " ");
             table[error][3] = rnd_kpp(table[error][2]);
-            //System.out.print(" ");
+            //System.out.print(" ");*/
+        }
+    }
+    private static void createErrorKpp(double percentError, String[][] table, int min, int max) {
+        int error;
+        for (int j = 0; j < percentError; j++){
+            Random rnd = new Random(System.currentTimeMillis());
+            /*error = min + rnd.nextInt(max - min + 1);
+            //System.out.print(error + " ");
+            table[error][0] = rnd_inn();
+            j++;*/
+            error = min + rnd.nextInt(max - min + 1);
+            System.out.print(error + " ");
+            table[error][1] = rnd_kpp(table[error][0]);
+            min--;
+            max++;
+            /*j++;
+            error = min + rnd.nextInt(max - min + 1);
+            //System.out.print(error + " ");
+            table[error][2] = rnd_inn();
+            j++;
+            error = min + rnd.nextInt(max - min + 1);
+            //System.out.print(error + " ");
+            table[error][3] = rnd_kpp(table[error][2]);
+            //System.out.print(" ");*/
+        }
+    }
+    private static void createErrorSum(double percentError, String[][] table, int min, int max) {
+        int error;
+        for (int j = 0; j < percentError; j++){
+            Random rnd = new Random(System.currentTimeMillis());
+            error = min + rnd.nextInt(max - min + 1);
+            System.out.print(error + " ");
+            table[error][4] = rnd_sum();
+            min --;
+            max ++;
+            /*j++;
+            error = min + rnd.nextInt(max - min + 1);
+            //System.out.print(error + " ");
+            table[error][1] = rnd_kpp(table[error][0]);
+            j++;
+            error = min + rnd.nextInt(max - min + 1);
+            //System.out.print(error + " ");
+            table[error][2] = rnd_inn();
+            j++;
+            error = min + rnd.nextInt(max - min + 1);
+            //System.out.print(error + " ");
+            table[error][3] = rnd_kpp(table[error][2]);
+            //System.out.print(" ");*/
         }
     }
     //за проход портим записи продавца и записи покупателя
-    public static void createTableErr(int rowNumber, String[][] table_purchase, String[][] table_sale, double percentError) throws IOException{
+    public static void createTableErr(int rowNumber, String[][] table_purchase, String[][] table_sale, double percentErrorInn, double percentErrorKpp, double percentErrorSum) throws IOException{
         String[][] table_purchase_err;
         String[][] table_sale_err;
         table_purchase_err = new String[table_purchase.length][table_purchase[0].length];
         table_sale_err = new String[table_sale.length][table_sale[0].length];
-        int countErr = (int)(table_purchase.length * percentError / 100);
+        int countErrInn = (int)(table_purchase.length * percentErrorInn / 100);//работаю с процентами
+        int countErrKpp = (int)(table_purchase.length * percentErrorKpp / 100);
+        int countErrSum = (int)(table_purchase.length * percentErrorSum / 100);
+        System.out.println("countErrInn: " + countErrInn);
+        System.out.println("countErrKpp: " + countErrKpp);
+        System.out.println("countErrSum: " + countErrSum);
         for (int i = 0; i < table_purchase.length; i++){
             for (int j = 0; j < table_purchase[0].length; j++){
                 table_purchase_err[i][j] = table_purchase[i][j];
@@ -119,18 +174,22 @@ public class FL_1 {
                 table_sale_err[i][j] = table_sale[i][j];
             }
         }
-        int min = 1;
-        int max = table_sale.length;
-        createError(countErr, table_sale_err, min, max);
+        int min = 0;
+        int max = table_sale.length-1;
+        createErrorInn(countErrInn, table_sale_err, min, max);
         min += 1;
         max -= 1;
-        createError(countErr, table_purchase_err, min, max);
+        createErrorKpp(countErrKpp, table_sale_err, min, max);
+        min += 1;
+        max -= 1;
+        createErrorSum(countErrSum, table_sale_err, min, max);
+        //createError(countErr, table_purchase_err, min, max); // так как с ошибками только 1 таблица
         Write_File(table_purchase_err, rowNumber, "TableError1.csv");
         Write_File(table_sale_err, rowNumber, "TableError2.csv");
     }
 
 
-    public static void createRndTable(int rowNumber, int columnNumber, double percentErrors) throws IOException {
+    public static void createRndTable(int rowNumber, int columnNumber, double percentErrorsInn, double percentErrorsKpp, double percentErrorsSum) throws IOException {
         String[][] table_purchase;
         String[][] table_sale;
         table_purchase = new String[rowNumber][columnNumber];
@@ -172,20 +231,25 @@ public class FL_1 {
             j++;
             table_sale[i][j] = table_purchase[i][j-2];
             j++;
-            table_sale[i][j] = rnd_sum();
+            table_sale[i][j] = table_purchase[i][j];
             j++;
             table_sale[i][j] = rnd_nds(table_sale[i][j-1]);
+
         }
         Write_File(table_sale, rowNumber, "Table2.csv");
-        createTableErr(rowNumber, table_purchase, table_sale, percentErrors);
+        createTableErr(rowNumber, table_purchase, table_sale, percentErrorsInn, percentErrorsKpp, percentErrorsSum);
     }
 
     public static void main(String[] args) throws IOException {
         Scanner in = new Scanner(System.in);
-        System.out.print("Enter precent errors : ");
-        double percentErrors = in.nextDouble();
+        System.out.print("Enter precent errors inn : ");
+        double percentErrorsInn = in.nextDouble();
+        System.out.print("Enter precent errors Kpp : ");
+        double percentErrorsKpp = in.nextDouble();
+        System.out.print("Enter precent errors Sum : ");
+        double percentErrorsSum = in.nextDouble();
         int rowNumber = 11; // 10, +1 Т.К. заголовки таблицы
         int columnNumber = 6;
-        createRndTable(rowNumber, columnNumber, percentErrors);
+        createRndTable(rowNumber, columnNumber, percentErrorsInn, percentErrorsKpp, percentErrorsSum);
     }
 }

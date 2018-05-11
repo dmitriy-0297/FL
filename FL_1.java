@@ -85,10 +85,10 @@ public class FL_1 {
         for (int j = 0; j < percentError; j++){
             Random rnd = new Random(System.currentTimeMillis());
             error = min + rnd.nextInt(max - min + 1);
-            System.out.print(error + " ");
+            //System.out.print(error + " ");
             table[error][0] = rnd_inn();
-            min--;
-            max++;
+            min++;
+            max--;
             /*j++;
             error = min + rnd.nextInt(max - min + 1);
             //System.out.print(error + " ");
@@ -113,10 +113,10 @@ public class FL_1 {
             table[error][0] = rnd_inn();
             j++;*/
             error = min + rnd.nextInt(max - min + 1);
-            System.out.print(error + " ");
+            //System.out.print(error + " ");
             table[error][1] = rnd_kpp(table[error][0]);
-            min--;
-            max++;
+            min++;
+            max--;
             /*j++;
             error = min + rnd.nextInt(max - min + 1);
             //System.out.print(error + " ");
@@ -133,10 +133,10 @@ public class FL_1 {
         for (int j = 0; j < percentError; j++){
             Random rnd = new Random(System.currentTimeMillis());
             error = min + rnd.nextInt(max - min + 1);
-            System.out.print(error + " ");
+            //System.out.print(error + " ");
             table[error][4] = rnd_sum();
-            min --;
-            max ++;
+            min ++;
+            max --;
             /*j++;
             error = min + rnd.nextInt(max - min + 1);
             //System.out.print(error + " ");
@@ -174,8 +174,9 @@ public class FL_1 {
                 table_sale_err[i][j] = table_sale[i][j];
             }
         }
-        int min = 0;
+        int min = 1;
         int max = table_sale.length-1;
+        //для таблицы 1
         createErrorInn(countErrInn, table_sale_err, min, max);
         min += 1;
         max -= 1;
@@ -183,7 +184,14 @@ public class FL_1 {
         min += 1;
         max -= 1;
         createErrorSum(countErrSum, table_sale_err, min, max);
-        //createError(countErr, table_purchase_err, min, max); // так как с ошибками только 1 таблица
+        //для таблицы 2
+        createErrorInn(countErrInn, table_purchase_err, min, max);
+        min += 1;
+        max -= 1;
+        createErrorKpp(countErrKpp, table_purchase_err, min, max);
+        min += 1;
+        max -= 1;
+        createErrorSum(countErrSum, table_purchase_err, min, max);
         Write_File(table_purchase_err, rowNumber, "TableError1.csv");
         Write_File(table_sale_err, rowNumber, "TableError2.csv");
     }
@@ -248,7 +256,7 @@ public class FL_1 {
         double percentErrorsKpp = in.nextDouble();
         System.out.print("Enter precent errors Sum : ");
         double percentErrorsSum = in.nextDouble();
-        int rowNumber = 11; // 10, +1 Т.К. заголовки таблицы
+        int rowNumber = 1000001; // 10**6, +1 Т.К. заголовки таблицы
         int columnNumber = 6;
         createRndTable(rowNumber, columnNumber, percentErrorsInn, percentErrorsKpp, percentErrorsSum);
     }
